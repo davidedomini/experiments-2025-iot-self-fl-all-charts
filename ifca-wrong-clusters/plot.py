@@ -27,7 +27,7 @@ def box_plot(data, area, cluster):
 
 def box_plot_all(data):
     plt.figure(figsize=(12, 6))
-    sns.barplot(data=data, x="Clusters", y="Accuracy", hue="Areas", palette="colorblind", width=0.6, linewidth=1.5)
+    sns.barplot(data=data, x="Clusters", y="Accuracy", hue="Areas", palette="colorblind", linewidth=1.5, errorbar="sd", capsize=0.3)
     plt.xlabel("Number of Clusters")
     plt.ylabel("$Accuracy - Test$")
     plt.legend(title="Real Areas")
