@@ -396,7 +396,7 @@ if __name__ == '__main__':
         ylabel=None,
         xlabel=None,
         colors=None,
-        linewidth=1,
+        linewidth=2,
         error_alpha=0.2,
         figure_size=(6, 4)
     ):
