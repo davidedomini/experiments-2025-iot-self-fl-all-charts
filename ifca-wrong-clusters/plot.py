@@ -2,10 +2,11 @@ import glob
 import matplotlib
 import pandas as pd
 import seaborn as sns
+from pathlib import Path
 import matplotlib.pyplot as plt
 
 def get_test_data(area, cluster):
-    files = glob.glob(f'data/*areas-{area}_clusters-{cluster}*test.csv')
+    files = glob.glob(f'ifca-wrong-clusters/data/*areas-{area}_clusters-{cluster}*test.csv')
     print(f'For area: {area} and cluster: {cluster} ---> {len(files)} files')
     dataframes = []
     for file in files:
@@ -21,27 +22,29 @@ def box_plot(data, area, cluster):
     plt.title(f'Areas {area} and clusters {cluster}')
     # plt.xlabel('Test')
     plt.ylabel('Value')
-    plt.savefig(f'plots/box_plot_area_{area}_cluster_{cluster}.pdf')
+    plt.savefig(f'charts/box_plot_area_{area}_cluster_{cluster}.pdf')
     plt.close()
 
 def box_plot_all(data):
     plt.figure(figsize=(12, 6))
-    sns.boxplot(data=data, x="Clusters", y="Accuracy", hue="Areas", palette="Set2", width=0.6, linewidth=1.5)
-    # plt.title("Boxplot delle performance per numero di cluster (colori per Area)")
+    sns.barplot(data=data, x="Clusters", y="Accuracy", hue="Areas", palette="colorblind", width=0.6, linewidth=1.5)
     plt.xlabel("Number of Clusters")
-    plt.ylabel("Validation Accuracy")
+    plt.ylabel("$Accuracy - Test$")
     plt.legend(title="Real Areas")
     plt.tight_layout()
-    plt.savefig('plots/box_plot_all.pdf', dpi = 300)
+    plt.savefig('charts/box_plot_all.pdf', dpi = 300)
 
 if __name__ == '__main__':
+
+    output_directory = 'charts/'
+    Path(output_directory).mkdir(parents=True, exist_ok=True)
 
     matplotlib.rcParams.update({'axes.titlesize': 20})
     matplotlib.rcParams.update({'axes.labelsize': 40})
     matplotlib.rcParams.update({'xtick.labelsize': 35})
     matplotlib.rcParams.update({'ytick.labelsize': 35})
-    matplotlib.rcParams.update({'legend.fontsize': 20})
-    matplotlib.rcParams.update({'legend.title_fontsize': 25})
+    matplotlib.rcParams.update({'legend.fontsize': 30})
+    matplotlib.rcParams.update({'legend.title_fontsize': 35})
     plt.rcParams.update({"text.usetex": True})
     plt.rc('text.latex', preamble=r'\usepackage{amsmath,amssymb,amsfonts}')
 
@@ -56,10 +59,8 @@ if __name__ == '__main__':
     for area in areas:
         for cluster in clusters[area]:
             data = get_test_data(area, cluster)
-            box_plot(data, area, cluster)
+            # box_plot(data, area, cluster)
             dfs.append(data)
     data = pd.concat(dfs)
-    # print(data)
-    # raise Exception('Diocane')
     box_plot_all(data)
     
