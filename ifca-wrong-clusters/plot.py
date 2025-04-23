@@ -6,14 +6,17 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 def get_test_data(area, cluster):
-    files = glob.glob(f'ifca-wrong-clusters/data/*areas-{area}_clusters-{cluster}*test.csv')
+    files = glob.glob(f'ifca-wrong-clusters/data/*areas-{area}_clusters-{cluster}*50.csv')
     print(f'For area: {area} and cluster: {cluster} ---> {len(files)} files')
     dataframes = []
     for file in files:
         df = pd.read_csv(file)
         df['Clusters'] = cluster
         df['Areas'] = area
-        dataframes.append(df)
+        df = df.tail(1)
+        if df['ValidationAccuracy'].values[0] != 0:
+            dataframes.append(df)
+    print(f'For area: {area} and cluster: {cluster} ---> {len(dataframes)} dataframes')
     return pd.concat(dataframes)
 
 def box_plot(data, area, cluster):
@@ -27,9 +30,9 @@ def box_plot(data, area, cluster):
 
 def box_plot_all(data):
     plt.figure(figsize=(12, 6))
-    sns.barplot(data=data, x="Clusters", y="Accuracy", hue="Areas", palette="colorblind", linewidth=1.5, errorbar="sd", capsize=0.3)
+    sns.barplot(data=data, x="Clusters", y="ValidationAccuracy", hue="Areas", palette="colorblind", linewidth=1.5, errorbar="sd", capsize=0.3)
     plt.xlabel("Number of Clusters")
-    plt.ylabel("$Accuracy - Test$")
+    plt.ylabel("$Accuracy$")
     plt.legend(title="Real Areas")
     plt.tight_layout()
     plt.savefig('charts/box_plot_all.pdf', dpi = 300)
