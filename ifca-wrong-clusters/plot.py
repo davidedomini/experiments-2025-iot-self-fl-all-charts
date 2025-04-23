@@ -53,7 +53,7 @@ if __name__ == '__main__':
     clusters = {
         3 : [1, 2], 
         5 : [1, 2, 3],
-        9 : [1, 3, 5]
+        9 : [1, 2, 3, 5]
     }
     dfs = []
     for area in areas:
